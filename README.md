@@ -2,7 +2,7 @@
 
 ## run locally
 
-- In Chrome, open chrome://extensions/
+- In Chrome, open `chrome://extensions/`
 - Click + Developer mode
 - Click Load unpacked extension…
 - Navigate to `src` and click OK
