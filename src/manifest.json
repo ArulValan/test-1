@@ -1,0 +1,39 @@
+{
+  "name": "Zoho Intime",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "gets zoho intime on the same dashboard",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "128": "icons/icon-128.png"
+  },
+  "background": {
+    "page": "background.html"
+  },
+  "permissions": [
+    "tabs"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "scripts/contentscript.js",
+        "scripts/moment.min.js"
+      ],
+      "run_at": "document_end",
+      "all_frames": false
+    }
+  ],
+  "page_action": {
+    "default_icon": {
+      "19": "icons/icon-16.png",
+      "38": "icons/icon-32.png"
+    },
+    "default_title": "Zoho Intime"
+  }
+}
+
+
