@@ -1,29 +1,50 @@
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  console.log('triggererd')
-  setTimeout(()=>{
-    main()
-  },3000)
+var observer = getDOMObserver();
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.args == "tab-in") {
+        let targetNode = document.getElementById("ZPAtt_entryNavigation");
+        let config = { attributes: true, childList: true, subtree: true };
+        console.log('triggererd');
+        setTimeout(() => {
+            main();
+            observer.observe(targetNode, config);
+        }, 2000);
+    }
+    else {
+        observer.disconnect();
+    }
+
 });
 
 
-function main(){
-let days = document.querySelectorAll("#ZPAtt_listViewEntries tr");
-days.forEach((day) => {
-    let td;
-    let timeRanges = day.querySelector('.CP .cust-bar')
-    if (checkValidDay(timeRanges.className)) {
-        let checkIns = getTime(timeRanges, 'span.present-bg')
-        let checkOuts = getTime(timeRanges, 'span.absent-bg')
-        td = getTableEl(getInTime(checkIns, checkOuts, day))
+/**
+ * Returns a DOM observer 
+ * Whenever the dash view changes the main function is triggered;
+ */
+function getDOMObserver() {
+    let callback = function (mutationsList, observer) {
+        console.log("DOM change");
+        setTimeout(() => main(), 500);
+    };
+    return new MutationObserver(callback);
+}
+function main() {
+    let days = document.querySelectorAll("#ZPAtt_listViewEntries tr");
+    days.forEach((day) => {
+        let td;
+        let timeRanges = day.querySelector('.CP .cust-bar')
+        if (checkValidDay(timeRanges.className)) {
+            let checkIns = getTime(timeRanges, 'span.present-bg')
+            let checkOuts = getTime(timeRanges, 'span.absent-bg')
+            td = getTableEl(getInTime(checkIns, checkOuts, day))
 
-    } else {
-        td = document.createElement('td')
-        td = getTableEl('Holiday/Leave')
-    }
-    day.appendChild(td)
+        } else {
+            td = document.createElement('td')
+            td = getTableEl('Holiday/Leave')
+        }
+        day.appendChild(td)
 
-})
-addTableHeader()
+    })
+    addTableHeader()
 }
 
 // utill functions
@@ -102,7 +123,7 @@ function getTimeDiff(startTime, endTime) {
 function getTableEl(data) {
     let td = document.createElement('td')
     td.innerText = data;
-    td.setAttribute('width',"130")
+    td.setAttribute('width', "130")
     return td
 }
 
